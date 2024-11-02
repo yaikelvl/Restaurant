@@ -24,7 +24,8 @@ model Client {
   age   Int
   phone String
 
+  available Boolean @default(true)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-

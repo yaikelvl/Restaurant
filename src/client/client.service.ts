@@ -1,7 +1,8 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { PrismaClient } from '@prisma/client';
+import { PaginationDto } from 'src/common';
 
 @Injectable()
 export class ClientService extends PrismaClient implements OnModuleInit {
@@ -11,22 +12,71 @@ export class ClientService extends PrismaClient implements OnModuleInit {
     this.logger.log('Database connected');
   }
   create(createClientDto: CreateClientDto) {
-    return createClientDto;
+
+    return this.client.create({ data: createClientDto });
   }
 
-  findAll() {
-    return `This action returns all client`;
+  async findAll(paginationDto: PaginationDto) {
+
+    const { page, limit } = paginationDto;
+
+    const totalPages = await this.client.count({
+      where: {
+        available: true
+      }
+    });
+    const lastPage = Math.ceil(totalPages / limit);
+
+    return {
+      data: await this.client.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+        where: {
+          available: true
+        }
+      }),
+      meta: {
+        total: totalPages,
+        page: page,
+        lastPage: lastPage
+      }
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: string) {
+    const client = await this.client.findFirst({ 
+      where: { id, available: true } });
+
+    if (!client) {
+      throw new NotFoundException(`Client with id #${id} not found`);
+    }
+    return client;
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async updateClient(id: string, updateClientDto: UpdateClientDto) {
+
+    await this.findOne(id);
+
+    return this.client.update({
+      where: { id },
+      data: updateClientDto
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: string) {
+
+    await this.findOne(id);
+
+    // return this.client.delete({
+    //   where: { id }
+    // })
+
+    const deleteCLient = await this.client.update({
+      where: { id },
+      data: {
+        available: false
+      }
+    });
+    return deleteCLient;
   }
 }
