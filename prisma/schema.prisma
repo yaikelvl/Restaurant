@@ -28,4 +28,17 @@ model Client {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurantId String?
+
+  @@index([available])
+}
+
+model Restaurant {
+  id       String   @id @default(uuid())
+  name     String
+  address  String
+  capacity Int
+  clients  Client[]
 }
