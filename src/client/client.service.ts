@@ -1,9 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class ClientService {
+export class ClientService extends PrismaClient implements OnModuleInit {
+  private readonly logger = new Logger('ClientService');
+  onModuleInit() {
+    this.$connect();
+    this.logger.log('Database connected');
+  }
   create(createClientDto: CreateClientDto) {
     return createClientDto;
   }
