@@ -1,53 +1,28 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '${PORT}:8080' # Usa la variable de entorno PORT
-    depends_on:
-      - postgres
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_SYNC: ${DB_SYNC}
-    volumes:
-      - .:/app # Mapea el directorio actual al contenedor
-      - /app/node_modules # Evita que se sobrescriba node_modules del contenedor
-    command: yarn start:dev # Inicia la aplicación en modo de desarrollo
-
   postgres:
-    image: postgres:16.2
-    restart: always
+    image: postgres:16.2  # Imagen de PostgreSQL
+    restart: always  # Reiniciar automáticamente si falla
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}  # Nombre de la base de datos
+      POSTGRES_USER: ${DB_USERNAME}  # Nombre de usuario
+      POSTGRES_PASSWORD: ${DB_PASSWORD}  # Contraseña
     ports:
-      - '15432:5432' # Mapea el puerto de Postgres
+      - '15432:5432'  # Exponer el puerto de PostgreSQL para conexión local
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data  # Persistencia de datos
 
   pgadmin:
-    image: dpage/pgadmin4
-    restart: always
+    image: dpage/pgadmin4  # Imagen de pgAdmin
+    restart: always  # Reiniciar automáticamente si falla
     environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@pgadmin.org"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_DEFAULT_EMAIL: "admin@pgadmin.org"  # Email de acceso a pgAdmin
+      PGADMIN_DEFAULT_PASSWORD: "admin"  # Contraseña de acceso a pgAdmin
     ports:
-      - '8081:80' # Mapea el puerto de pgAdmin
+      - '8081:80'  # Exponer pgAdmin en el puerto 8081
     depends_on:
-      - postgres
+      - postgres  # Esperar a que PostgreSQL esté disponible
 
 volumes:
-  postgres-data:
-
-
-networks:
-  default:
-    driver: bridge
+  postgres-data:  # Volumen persistente para los datos de PostgreSQL

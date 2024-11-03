@@ -9,6 +9,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entities/order.entity';
 import { Client } from 'src/client/entities/client.entity';
 import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
+import { PaginationDto } from 'src/common';
 
 @Injectable()
 export class OrderService {
@@ -79,6 +80,25 @@ export class OrderService {
       restaurant,
     });
     return await this.orderRepository.save(order);
+  }
+
+  async findAll(paginationDto: PaginationDto, softDelete = false) {
+    const { page = 1, limit = 10 } = paginationDto;
+
+    const [data, total] = await this.orderRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: { softDelete },
+    });
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        lastPage: Math.ceil(total / limit),
+      },
+    };
   }
 
   async getOrderToday(order: CreateOrderDto): Promise<Order[]> {

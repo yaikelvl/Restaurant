@@ -9,6 +9,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { PaginationDto } from 'src/common';
 import { Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
+import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
 
 @Injectable()
 export class ClientService {
@@ -80,5 +81,14 @@ export class ClientService {
     } catch (error) {
       throw new BadRequestException('Failed to delete client', error.message);
     }
+  }
+
+  async findFavoriteRestaurants(clientId: string): Promise<Restaurant[]> {
+    const client = await this.clientRepository.findOne({
+      where: { id: clientId },
+      relations: ['restaurants'],
+    });
+
+    return client ? client.restaurants : [];
   }
 }

@@ -9,6 +9,8 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Repository } from 'typeorm';
 import { Restaurant } from './entities/restaurant.entity';
 import { PaginationDto } from 'src/common';
+import { Client } from 'src/client/entities/client.entity';
+import { createRegexPattern, normalizeName } from '../common/constants/utils';
 
 @Injectable()
 export class RestaurantService {
@@ -77,12 +79,13 @@ export class RestaurantService {
     }
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<boolean> {
     const restaurant = await this.findOne(id);
     restaurant.softDelete = true;
 
     try {
       await this.restaurantRepository.save(restaurant);
+      return true;
     } catch (error) {
       throw new BadRequestException(
         'Failed to delete restaurant',
@@ -91,9 +94,23 @@ export class RestaurantService {
     }
   }
 
-  async findByName(name: string): Promise<Restaurant | null> {
-    return this.restaurantRepository.findOne({
-      where: { name, softDelete: false },
+  async findClientsByRestaurant(restaurantId: string): Promise<Client[]> {
+    const restaurant = await this.restaurantRepository.findOne({
+      where: { id: restaurantId },
+      relations: ['clients'],
     });
+
+    return restaurant ? restaurant.clients : [];
+  }
+
+  async findByName(name: string): Promise<Restaurant | null> {
+    const normalizedName = normalizeName(name);
+    const regexPattern = createRegexPattern(normalizedName);
+
+    return this.restaurantRepository
+      .createQueryBuilder('restaurant')
+      .where('restaurant.name ILIKE :name', { name: regexPattern })
+      .andWhere('restaurant.softDelete = false')
+      .getOne();
   }
 }

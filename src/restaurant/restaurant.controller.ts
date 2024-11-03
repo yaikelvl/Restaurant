@@ -15,12 +15,14 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FilterSoftDelete } from 'src/common/decorators/filter-soft-delete.decorator';
 import { PaginationDto } from 'src/common';
+import { Client } from 'src/client/entities/client.entity';
+import { ValidateUniqueRestaurantName } from './decorator/restaurant-name.validator';
 @FilterSoftDelete()
 @ApiTags('restaurant')
 @Controller('restaurant')
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) {}
-
+  @ValidateUniqueRestaurantName()
   @Post()
   create(@Body() createRestaurantDto: CreateRestaurantDto) {
     return this.restaurantService.create(createRestaurantDto);
@@ -43,6 +45,7 @@ export class RestaurantController {
   }
 
   @Patch(':id')
+  @ValidateUniqueRestaurantName()
   updateClient(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateClientDto: UpdateRestaurantDto,
@@ -53,5 +56,10 @@ export class RestaurantController {
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.restaurantService.remove(id);
+  }
+
+  @Get(':id/clients')
+  async getClients(@Param('id') id: string): Promise<Client[]> {
+    return this.restaurantService.findClientsByRestaurant(id);
   }
 }
