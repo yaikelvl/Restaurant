@@ -16,7 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { FilterSoftDelete } from 'src/common/decorators/filter-soft-delete.decorator';
 import { PaginationDto } from 'src/common';
 @FilterSoftDelete()
-@ApiTags('client')
+@ApiTags('restaurant')
 @Controller('restaurant')
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) {}

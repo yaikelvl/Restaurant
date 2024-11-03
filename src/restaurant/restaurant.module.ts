@@ -8,5 +8,6 @@ import { DatabaseModule } from 'src/database/database.module';
   imports: [DatabaseModule],
   providers: [...restaurantProviders, RestaurantService],
   controllers: [RestaurantController],
+  exports: [...restaurantProviders],
 })
 export class RestaurantModule {}

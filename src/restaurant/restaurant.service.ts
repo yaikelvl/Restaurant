@@ -90,4 +90,10 @@ export class RestaurantService {
       );
     }
   }
+
+  async findByName(name: string): Promise<Restaurant | null> {
+    return this.restaurantRepository.findOne({
+      where: { name, softDelete: false },
+    });
+  }
 }

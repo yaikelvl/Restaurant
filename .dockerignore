@@ -1,9 +1,5 @@
-# Ignorar la carpeta de Postgres
-postgres/
-
-# Ignorar archivos de configuración de logs
-*.log
-
-# Ignorar archivos temporales de sistema
-.DS_Store
-Thumbs.db
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.env

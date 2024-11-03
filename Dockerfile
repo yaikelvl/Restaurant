@@ -1,20 +1,23 @@
-# Usa una imagen base de Node.js ligera (Alpine)
+# Usa una imagen Node.js como base
 FROM node:18-alpine
 
-# Crear y establecer el directorio de trabajo
-WORKDIR /usr/src/app
+# Establece el directorio de trabajo
+WORKDIR /app
 
-# Copiar solo los archivos necesarios para instalar dependencias
-COPY package*.json yarn.lock ./
+# Copia el package.json y yarn.lock (o package-lock.json)
+COPY package.json yarn.lock ./
 
-# Instalar dependencias de producción únicamente para el entorno de producción
-RUN yarn install --production
+# Instala las dependencias, incluyendo devDependencies
+RUN yarn install --frozen-lockfile
 
-# Copiar el resto de la aplicación
+# Copia el resto de la aplicación
 COPY . .
 
-# Exponer el puerto de la aplicación
-EXPOSE 3000
+# Exponer el puerto que usará la aplicación
+EXPOSE 8080
 
-# Comando para iniciar la aplicación
-CMD ["yarn", "start:prod"]
+# Comando para construir la aplicación
+RUN yarn build
+
+# Comando para iniciar la aplicación en modo de desarrollo
+CMD ["yarn", "start:dev"]
