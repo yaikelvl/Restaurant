@@ -1,20 +1,36 @@
 import { CommonEntity } from 'src/common/entities/common.entity';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Order } from 'src/order/entities/order.entity';
+import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+} from 'typeorm';
 
-@Entity('clients')
+@Entity()
 export class Client extends CommonEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column()
   name: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column()
   phone: string;
 
-  @Column({ type: 'int' })
+  @Column()
   age: number;
+
+  @ManyToMany(() => Restaurant, (restaurant) => restaurant.clients)
+  @JoinTable()
+  restaurants: Restaurant[];
+
+  @OneToMany(() => Order, (order) => order.client)
+  orders: Order[];
 }

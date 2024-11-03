@@ -6,7 +6,7 @@ import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [RestaurantController],
   providers: [...restaurantProviders, RestaurantService],
+  controllers: [RestaurantController],
 })
 export class RestaurantModule {}

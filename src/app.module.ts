@@ -9,9 +9,9 @@ import { DatabaseModule } from './database/database.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
+    OrderModule,
     ClientModule,
     RestaurantModule,
-    OrderModule,
   ],
   controllers: [],
   providers: [],
