@@ -1,12 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+  Query,
+} from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { PaginationDto } from 'src/common';
+import { FilterSoftDelete } from 'src/common/decorators/filter-soft-delete.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
 
+@FilterSoftDelete()
+@ApiTags('client')
 @Controller('client')
 export class ClientController {
-  constructor(private readonly clientService: ClientService) { }
+  constructor(private readonly clientService: ClientService) {}
 
   @Post()
   create(@Body() createClientDto: CreateClientDto) {
@@ -14,23 +29,36 @@ export class ClientController {
   }
 
   @Get()
-  findAll( @Query() paginationDto: PaginationDto ) {
-    return this.clientService.findAll( paginationDto );
+  findAll(
+    @Query() paginationDto: PaginationDto,
+    @Query('softDelete') softDelete?: boolean,
+  ) {
+    return this.clientService.findAll(paginationDto, softDelete);
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.clientService.findOne(id);
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('softDelete') softDelete?: boolean,
+  ) {
+    return this.clientService.findOne(id, softDelete);
   }
 
   @Patch(':id')
-  updateClient(@Param('id', ParseUUIDPipe) id: string, @Body() updateClientDto: UpdateClientDto) {
-    
+  updateClient(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateClientDto: UpdateClientDto,
+  ) {
     return this.clientService.updateClient(id, updateClientDto);
   }
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.clientService.remove(id);
+  }
+
+  @Get(':id/restaurants')
+  async getFavoriteRestaurants(@Param('id') id: string): Promise<Restaurant[]> {
+    return this.clientService.findFavoriteRestaurants(id);
   }
 }

@@ -1,34 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+// src/order/order.controller.ts
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { Order } from './entities/order.entity';
+import { ApiTags } from '@nestjs/swagger';
+import { FilterSoftDelete } from 'src/common/decorators/filter-soft-delete.decorator';
+import { PaginationDto } from 'src/common';
 
-@Controller('order')
+@FilterSoftDelete()
+@ApiTags('orders')
+@Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
+  async create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     return this.orderService.create(createOrderDto);
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+  findAll(
+    @Query() paginationDto: PaginationDto,
+    @Query('softDelete') softDelete?: boolean,
+  ) {
+    return this.orderService.findAll(paginationDto, softDelete);
   }
 }
