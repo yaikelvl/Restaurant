@@ -1,15 +1,13 @@
 import { IsNumber, IsPositive, IsString } from 'class-validator';
-import { AppModule } from '../../app.module';
-export class CreateRestaurantDto {
+import { CommonDto } from 'src/common/dto/common.dto';
+export class CreateRestaurantDto extends CommonDto {
+  @IsString()
+  name: string;
 
-    @IsString()
-    name: string;
+  @IsString()
+  address: string;
 
-    @IsString()
-    Address: string;
-
-    @IsNumber()
-    @IsPositive()
-    Capasity: number;
-
+  @IsNumber()
+  @IsPositive()
+  capacity: number;
 }

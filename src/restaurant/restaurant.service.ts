@@ -1,9 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+import { Repository } from 'typeorm';
+import { Restaurant } from './entities/restaurant.entity';
 
 @Injectable()
 export class RestaurantService {
+  constructor(
+    @Inject('RESTAURANT_REPOSITORY')
+    private restaurantRepository: Repository<Restaurant>,
+  ) {}
+
   create(createRestaurantDto: CreateRestaurantDto) {
     return 'This action adds a new restaurant';
   }
