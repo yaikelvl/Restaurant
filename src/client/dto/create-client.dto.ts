@@ -8,8 +8,9 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { CommonDto } from 'src/common/dto/common.dto';
 
-export class CreateClientDto {
+export class CreateClientDto extends CommonDto {
   @ApiProperty()
   @IsString()
   name: string;
@@ -21,7 +22,7 @@ export class CreateClientDto {
 
   @ApiProperty()
   @IsString()
-  @MinLength(11) // Exsample: +5354381008
+  @MinLength(11) // Example: +5354381008
   phone: string;
 
   @ApiProperty()

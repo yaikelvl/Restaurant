@@ -1,3 +1,4 @@
+import { IsEmail, IsPhoneNumber } from 'class-validator';
 import { CommonEntity } from 'src/common/entities/common.entity';
 import { Order } from 'src/order/entities/order.entity';
 import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
@@ -19,9 +20,11 @@ export class Client extends CommonEntity {
   name: string;
 
   @Column({ unique: true })
+  @IsEmail({}, { message: 'The email is not valid' })
   email: string;
 
   @Column()
+  @IsPhoneNumber()
   phone: string;
 
   @Column()

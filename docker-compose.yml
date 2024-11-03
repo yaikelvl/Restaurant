@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   postgres:
@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: 12345678
       POSTGRES_DB: restaurantdb
     ports:
-      - "15432:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -25,6 +25,26 @@ services:
       - "9000:80"
     networks:
       - postgres_network
+
+  nestjs:
+    build:
+      context: . # Asegúrate de estar en el directorio raíz de tu aplicación
+      dockerfile: Dockerfile # Asegúrate de tener un Dockerfile en la raíz
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 12345678
+      DATABASE_NAME: restaurantdb
+    ports:
+      - "8080:8080" # Exponiendo el puerto de tu aplicación
+    depends_on:
+      - postgres
+    networks:
+      - postgres_network
+    volumes:
+      - .:/usr/src/app # Para que los cambios en el código se reflejen instantáneamente en el contenedor
+      - /usr/src/app/node_modules # Evita problemas de permisos con los módulos de node
 
 volumes:
   postgres_data:

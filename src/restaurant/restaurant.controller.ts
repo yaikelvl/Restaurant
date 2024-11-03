@@ -6,11 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+import { FilterSoftDelete } from 'src/common/decorators/filter-soft-delete.decorator';
+import { PaginationDto } from 'src/common';
+@FilterSoftDelete()
+@ApiTags('client')
 @Controller('restaurant')
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) {}
@@ -21,25 +27,31 @@ export class RestaurantController {
   }
 
   @Get()
-  findAll() {
-    return this.restaurantService.findAll();
+  findAll(
+    @Query() paginationDto: PaginationDto,
+    @Query('softDelete') softDelete?: boolean,
+  ) {
+    return this.restaurantService.findAll(paginationDto, softDelete);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.restaurantService.findOne(+id);
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('softDelete') softDelete?: boolean,
+  ) {
+    return this.restaurantService.findOne(id, softDelete);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateRestaurantDto: UpdateRestaurantDto,
+  updateClient(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateClientDto: UpdateRestaurantDto,
   ) {
-    return this.restaurantService.update(+id, updateRestaurantDto);
+    return this.restaurantService.updateClient(id, updateClientDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.restaurantService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.restaurantService.remove(id);
   }
 }

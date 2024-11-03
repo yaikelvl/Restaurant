@@ -14,7 +14,10 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { PaginationDto } from 'src/common';
 import { FilterSoftDelete } from 'src/common/decorators/filter-soft-delete.decorator';
+import { ApiTags } from '@nestjs/swagger';
+
 @FilterSoftDelete()
+@ApiTags('client')
 @Controller('client')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
@@ -33,8 +36,11 @@ export class ClientController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.clientService.findOne(id);
+  findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('softDelete') softDelete?: boolean,
+  ) {
+    return this.clientService.findOne(id, softDelete);
   }
 
   @Patch(':id')

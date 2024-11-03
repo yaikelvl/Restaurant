@@ -1,8 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Repository } from 'typeorm';
 import { Restaurant } from './entities/restaurant.entity';
+import { PaginationDto } from 'src/common';
 
 @Injectable()
 export class RestaurantService {
@@ -11,23 +17,77 @@ export class RestaurantService {
     private restaurantRepository: Repository<Restaurant>,
   ) {}
 
-  create(createRestaurantDto: CreateRestaurantDto) {
-    return 'This action adds a new restaurant';
+  async create(createClientDto: CreateRestaurantDto): Promise<Restaurant> {
+    try {
+      const restaurant = this.restaurantRepository.create(createClientDto);
+      return await this.restaurantRepository.save(restaurant);
+    } catch (error) {
+      throw new BadRequestException(
+        'Failed to create restaurant',
+        error.message,
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all restaurant`;
+  async findAll(paginationDto: PaginationDto, softDelete = false) {
+    const { page = 1, limit = 10 } = paginationDto;
+
+    const [data, total] = await this.restaurantRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: { softDelete },
+    });
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        lastPage: Math.ceil(total / limit),
+      },
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} restaurant`;
+  async findOne(id: string, softDelete = false): Promise<Restaurant> {
+    const restaurant = await this.restaurantRepository.findOne({
+      where: { id, softDelete },
+    });
+
+    if (!restaurant) {
+      throw new NotFoundException(`Restaurant with id #${id} not found`);
+    }
+
+    return restaurant;
   }
 
-  update(id: number, updateRestaurantDto: UpdateRestaurantDto) {
-    return `This action updates a #${id} restaurant`;
+  async updateClient(
+    id: string,
+    updateClientDto: UpdateRestaurantDto,
+  ): Promise<Restaurant> {
+    const restaurant = await this.findOne(id);
+    Object.assign(restaurant, updateClientDto);
+
+    try {
+      return await this.restaurantRepository.save(restaurant);
+    } catch (error) {
+      throw new BadRequestException(
+        'Failed to update restaurant',
+        error.message,
+      );
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} restaurant`;
+  async remove(id: string): Promise<void> {
+    const restaurant = await this.findOne(id);
+    restaurant.softDelete = true;
+
+    try {
+      await this.restaurantRepository.save(restaurant);
+    } catch (error) {
+      throw new BadRequestException(
+        'Failed to delete restaurant',
+        error.message,
+      );
+    }
   }
 }

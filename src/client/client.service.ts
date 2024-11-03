@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { PaginationDto } from 'src/common';
@@ -12,64 +17,68 @@ export class ClientService {
     private clientRepository: Repository<Client>,
   ) {}
 
-  create(createClientDto: CreateClientDto) {
-    return this.clientRepository.create(createClientDto);
+  async create(createClientDto: CreateClientDto): Promise<Client> {
+    try {
+      const client = this.clientRepository.create(createClientDto);
+      return await this.clientRepository.save(client);
+    } catch (error) {
+      throw new BadRequestException('Failed to create client', error.message);
+    }
   }
 
-  async findAll(paginationDto: PaginationDto, softDelete: boolean) {
-    const { page, limit } = paginationDto;
+  async findAll(paginationDto: PaginationDto, softDelete = false) {
+    const { page = 1, limit = 10 } = paginationDto;
 
-    const totalPages = await this.clientRepository.count({
-      where: {
-        softDelete,
-      },
+    const [data, total] = await this.clientRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: { softDelete },
     });
-    const lastPage = Math.ceil(totalPages / limit);
 
     return {
-      data: await this.clientRepository.find({
-        skip: (page - 1) * limit,
-        take: limit,
-        where: {
-          softDelete: true,
-        },
-      }),
+      data,
       meta: {
-        total: totalPages,
-        page: page,
-        lastPage: lastPage,
+        total,
+        page,
+        lastPage: Math.ceil(total / limit),
       },
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, softDelete = false): Promise<Client> {
     const client = await this.clientRepository.findOne({
-      where: { id, softDelete: true },
+      where: { id, softDelete },
     });
 
     if (!client) {
       throw new NotFoundException(`Client with id #${id} not found`);
     }
+
     return client;
   }
 
   async updateClient(
     id: string,
     updateClientDto: UpdateClientDto,
-  ): Promise<void> {
-    const result = await this.clientRepository.update(id, updateClientDto);
+  ): Promise<Client> {
+    const client = await this.findOne(id);
+    Object.assign(client, updateClientDto);
 
-    if (result.affected === 0) {
-      throw new NotFoundException(`Client with ID ${id} not found`);
+    try {
+      return await this.clientRepository.save(client);
+    } catch (error) {
+      throw new BadRequestException('Failed to update client', error.message);
     }
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
+  async remove(id: string): Promise<void> {
+    const client = await this.findOne(id);
+    client.softDelete = true;
 
-    const deleteCLient = await this.clientRepository.update(id, {
-      softDelete: true,
-    });
-    return deleteCLient;
+    try {
+      await this.clientRepository.save(client);
+    } catch (error) {
+      throw new BadRequestException('Failed to delete client', error.message);
+    }
   }
 }

@@ -13,6 +13,8 @@ export class FilterSoftDeletedInterceptor implements NestInterceptor {
 
     if (req.query.softDelete === undefined) {
       req.query.softDelete = false;
+    } else {
+      req.query.softDelete = req.query.softDelete === 'true';
     }
 
     return next.handle();
