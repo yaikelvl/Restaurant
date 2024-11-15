@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEmail, IsNumber, IsPositive, IsString, Min, MinLength } from "class-validator";
+import { IsEmail, IsNumber, IsPositive, IsString, IsUUID, Min, MinLength } from "class-validator";
 
 
 export class CreateClientDto {
@@ -21,4 +21,7 @@ export class CreateClientDto {
     @Type(() => Number)
     age: number;
 
+    @IsString()
+    @IsUUID()
+    restaurantId: string;
 }

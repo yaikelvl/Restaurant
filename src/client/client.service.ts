@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { PrismaClient } from '@prisma/client';
@@ -7,13 +7,35 @@ import { PaginationDto } from 'src/common';
 @Injectable()
 export class ClientService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('ClientService');
+  //private count: number = 1;
   onModuleInit() {
     this.$connect();
     this.logger.log('Database connected');
   }
-  create(createClientDto: CreateClientDto) {
+  async create(createClientDto: CreateClientDto) {
+    const { capacity } = await this.getRestaurantTerms(createClientDto.restaurantId);
 
-    return this.client.create({ data: createClientDto });
+    const client = await this.client.findUnique({
+      where: { email: createClientDto.email },
+    });
+
+    if (client) {
+      throw new BadRequestException(`The client with email ${createClientDto.email} already exists`);
+    }
+
+    const count = await this.client.count({
+      where: {
+        restaurantId: createClientDto.restaurantId
+      }
+    })
+    console.log(count)
+
+    if (count < capacity) {
+      return this.client.create({ data: createClientDto });
+    }
+    else {
+      throw new BadRequestException(`The restaurant is full`);
+    }
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -27,7 +49,7 @@ export class ClientService extends PrismaClient implements OnModuleInit {
     });
     const lastPage = Math.ceil(totalPages / limit);
 
-    return {
+    const client = {
       data: await this.client.findMany({
         skip: (page - 1) * limit,
         take: limit,
@@ -41,11 +63,17 @@ export class ClientService extends PrismaClient implements OnModuleInit {
         lastPage: lastPage
       }
     }
+    const { data, meta } = client;
+    const clientsDetails = data.map(({ id, name, email, phone, age, restaurantId }) => ({ id, name, email, phone, age, restaurantId }));
+
+    return { clientsDetails, meta };
+
   }
 
   async findOne(id: string) {
-    const client = await this.client.findFirst({ 
-      where: { id, available: true } });
+    const client = await this.client.findFirst({
+      where: { id, available: true }
+    });
 
     if (!client) {
       throw new NotFoundException(`Client with id #${id} not found`);
@@ -67,10 +95,6 @@ export class ClientService extends PrismaClient implements OnModuleInit {
 
     await this.findOne(id);
 
-    // return this.client.delete({
-    //   where: { id }
-    // })
-
     const deleteCLient = await this.client.update({
       where: { id },
       data: {
@@ -78,5 +102,22 @@ export class ClientService extends PrismaClient implements OnModuleInit {
       }
     });
     return deleteCLient;
+  }
+
+  async getRestaurantTerms(restaurantId: string): Promise<{ capacity: number }> {
+    const restaurant = await this.restaurant.findUnique({
+      where: {
+        id: restaurantId,
+      },
+      select: {
+        capacity: true,
+      },
+    });
+
+    if (!restaurant) {
+      throw new BadRequestException('Restaurant not found');
+    }
+
+    return restaurant;
   }
 }

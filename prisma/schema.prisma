@@ -8,13 +8,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 // datasource db {
-//   provider = "postgresql"
+//   provider = "sqlite"
 //   url      = env("DATABASE_URL")
 // }
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+
+enum OrderStatus {
+  PENDING
+  TRANSPORTING
+  DELIVERING
+  CANCELED
 }
 
 model Client {
@@ -29,16 +36,37 @@ model Client {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id])
   restaurantId String?
+  order        Order[]
 
   @@index([available])
 }
 
 model Restaurant {
-  id       String   @id @default(uuid())
-  name     String
-  address  String
-  capacity Int
-  clients  Client[]
+  id        String  @id @default(uuid())
+  name      String
+  address   String
+  capacity  Int
+  available Boolean @default(true)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  clients   Client[]
+  order     Order[]
+}
+
+model Order {
+  id          String  @id @default(uuid())
+  description String
+  ordeStatus  OrderStatus
+
+  restaurantId String?
+  clientId     String?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  client     Client[] 
+  restaurant Restaurant[]
 }

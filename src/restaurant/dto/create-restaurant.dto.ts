@@ -1,15 +1,16 @@
 import { IsNumber, IsPositive, IsString } from 'class-validator';
-import { AppModule } from '../../app.module';
+import { Type } from 'class-transformer';
 export class CreateRestaurantDto {
 
     @IsString()
     name: string;
 
     @IsString()
-    Address: string;
+    address: string;
 
     @IsNumber()
     @IsPositive()
-    Capasity: number;
+    @Type(() => Number)
+    capacity: number;
 
 }
