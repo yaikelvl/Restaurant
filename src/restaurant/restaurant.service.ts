@@ -18,8 +18,15 @@ export class RestaurantService extends PrismaClient implements OnModuleInit {
   }
 
   async create(createRestaurantDto: CreateRestaurantDto) {
-
-    return await this.restaurant.create({ data: createRestaurantDto });
+    const restaurant = await this.restaurant.findFirst({
+      where: {
+        address: createRestaurantDto.address
+      }
+    })
+    if (!restaurant) {
+      return await this.restaurant.create({ data: createRestaurantDto });
+    }
+    throw new BadRequestException('Restaurant already exists');
   }
 
   async findAll(paginationDto: PaginationDto) {

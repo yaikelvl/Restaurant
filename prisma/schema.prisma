@@ -12,6 +12,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 // datasource db {
 //   provider = "sqlite"
 //   url      = env("DATABASE_URL")
@@ -22,6 +23,13 @@ enum OrderStatus {
   TRANSPORTING
   DELIVERING
   CANCELED
+}
+
+enum Roles {
+  ADMIN
+  USER
+  SELLER
+  BUYER
 }
 
 model Client {
@@ -57,16 +65,31 @@ model Restaurant {
 }
 
 model Order {
-  id          String  @id @default(uuid())
+  id          String      @id @default(uuid())
   description String
   ordeStatus  OrderStatus
 
   restaurantId String?
   clientId     String?
 
+  available Boolean @default(true)
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  client     Client[] 
+  client     Client[]
   restaurant Restaurant[]
+}
+
+model User {
+  id        String  @id @default(uuid())
+  name      String
+  email     String  @unique
+  password  String
+  role      Roles[]  @default([USER])
+  
+  available Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

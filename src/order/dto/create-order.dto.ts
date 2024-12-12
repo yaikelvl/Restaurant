@@ -1,5 +1,5 @@
 import { OrderStatus } from "@prisma/client";
-import { IsEnum, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsEnum, IsString, IsUUID } from "class-validator";
 
 export class CreateOrderDto {
 
@@ -7,9 +7,8 @@ export class CreateOrderDto {
     description: string;
 
     @IsEnum(OrderStatus, {
-        message: `Possible status values are ${OrderStatus}`
+        message: `Possible status values are ${Object.values(OrderStatus)}`
     })
-    @IsOptional()
     ordeStatus: OrderStatus = OrderStatus.PENDING
 
     @IsString()

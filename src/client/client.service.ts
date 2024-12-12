@@ -1,13 +1,14 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Roles } from '@prisma/client';
 import { PaginationDto } from 'src/common';
+import { Auth } from 'src/auth/decorators';
 
 @Injectable()
 export class ClientService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('ClientService');
-  //private count: number = 1;
+  
   onModuleInit() {
     this.$connect();
     this.logger.log('Database connected');
@@ -28,8 +29,7 @@ export class ClientService extends PrismaClient implements OnModuleInit {
         restaurantId: createClientDto.restaurantId
       }
     })
-    console.log(count)
-
+    
     if (count < capacity) {
       return this.client.create({ data: createClientDto });
     }
