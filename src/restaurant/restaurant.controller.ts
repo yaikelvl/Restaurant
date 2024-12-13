@@ -5,10 +5,12 @@ import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { PaginationDto } from 'src/common';
+import { Auth } from 'src/auth/decorators';
 
 
 @ApiTags('Restaurants')
 @Controller('restaurant')
+@Auth()
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) {}
 
