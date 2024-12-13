@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'TRANSPORTING', 'DELIVERING', 'CANCELED');
+
 -- CreateTable
 CREATE TABLE "Client" (
     "id" TEXT NOT NULL,
@@ -29,7 +32,8 @@ CREATE TABLE "Restaurant" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" TEXT NOT NULL,
-    "description" TEXT,
+    "description" TEXT NOT NULL,
+    "ordeStatus" "OrderStatus" NOT NULL,
     "restaurantId" TEXT,
     "clientId" TEXT,
     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
