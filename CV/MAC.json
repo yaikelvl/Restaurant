@@ -168,6 +168,10 @@
     "preferences": {
       "preferredCompetences": [
         {
+          "name": "Adobe Lightroom",
+          "type": "technology"
+        },
+        {
           "name": "Adobe Photoshop",
           "type": "technology"
         },
