@@ -192,6 +192,10 @@
           "type": "technology"
         },
         {
+          "name": "Mongoose",
+          "type": "technology"
+        },
+        {
           "name": "NextJS",
           "type": "technology"
         },
