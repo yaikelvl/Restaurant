@@ -168,6 +168,10 @@
     "preferences": {
       "preferredCompetences": [
         {
+          "name": "Adobe Photoshop",
+          "type": "technology"
+        },
+        {
           "name": "CSS",
           "type": "technology"
         },
