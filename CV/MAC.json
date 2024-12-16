@@ -1,0 +1,287 @@
+{
+  "$schema": "https://raw.githubusercontent.com/getmanfred/mac/v0.5/schema/schema.json",
+  "settings": {
+    "language": "EN",
+    "MACVersion": "0.5"
+  },
+  "aboutMe": {
+    "profile": {
+      "name": "Yaikel",
+      "surnames": "Valdés Luis",
+      "title": "%%HEADLINE%%",
+      "description": "Passionate Backend Developer. My goal is to create functional and well-documented applications. I possess Intermediate skills in programming languages ​​such as Typescript and JavaScript, as well as experience with modern frameworks and libraries such as nestJS, I have experience working with different databases such as PostgresSQL, MongoSQL and MySQL. My engineering background has provided me with a solid foundation for tackling complex technical challenges and finding efficient solutions. I am an effective communicator and enjoy collaborating in multidisciplinary teams, which allows me to contribute significantly to joint projects. My professional goal is to expand my skills and knowledge to become a well-rounded Fullstack developer, combining my backend experience with the ability to create complete and versatile solutions.",
+      "avatar": {
+        "link": "https://media-asgard.s3.eu-west-1.amazonaws.com/24/11/13/c8be507c-6e06-4d69-a16a-623d99e78cd2_foto-de-perfil.jpg",
+        "alt": "Foto de Perfil.jpg"
+      },
+      "location": {
+        "notes": "Autocompleted using Google Maps API (id: ChIJEcz_XmNZ1YgR4iV7b-LvfIA)",
+        "country": "Cuba",
+        "region": "Villa Clara",
+        "municipality": "Caibarién"
+      }
+    }
+  },
+  "experience": {
+    "jobs": [
+      {
+        "organization": {
+          "name": "Damile Studio"
+        },
+        "roles": [
+          {
+            "name": "Photo editing technician",
+            "startDate": "2018-04-01",
+            "finishDate": "2021-06-01",
+            "challenges": [
+              {
+                "description": "I work especially on event photos; weddings, birthdays, studio photos, baptisms, sweet 15 photos, babies. Using Photoshop tools to retouch shadows and lighting and Lightroom for a more polished finish."
+              }
+            ],
+            "competences": [
+              {
+                "name": "Adobe Lightroom",
+                "type": "technology"
+              },
+              {
+                "name": "Adobe Photoshop",
+                "type": "technology"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "knowledge": {
+    "languages": [
+      {
+        "name": "EN",
+        "fullName": "Inglés",
+        "level": "Professional working proficiency"
+      },
+      {
+        "name": "ES",
+        "fullName": "Español",
+        "level": "Native or bilingual proficiency"
+      }
+    ],
+    "hardSkills": [
+      {
+        "skill": {
+          "name": "Adobe Photoshop",
+          "type": "technology"
+        }
+      },
+      {
+        "skill": {
+          "name": "Docker",
+          "type": "technology"
+        }
+      },
+      {
+        "skill": {
+          "name": "GraphQL",
+          "type": "technology"
+        }
+      },
+      {
+        "skill": {
+          "name": "TypeScript",
+          "type": "technology"
+        }
+      },
+      {
+        "skill": {
+          "name": "nestJS",
+          "type": "technology"
+        }
+      }
+    ],
+    "studies": [
+      {
+        "studyType": "officialDegree",
+        "degreeAchieved": true,
+        "name": "Computer Science Engineer",
+        "startDate": "2009-09-01",
+        "institution": {
+          "name": "University of Informatics Sciences",
+          "description": "Graduated as a Computer Science Engineer in  2014 from the University of Informatics Sciences (UCI) in Havana, Cuba.",
+          "URL": "https://www.uci.cu/en",
+          "image": {
+            "link": "https://media-asgard.s3.eu-west-1.amazonaws.com/24/11/13/d44bb52e-86ae-4ef1-8083-220880c93f47_logotipo_uci_2.png",
+            "alt": "Logotipo_UCI_2.png"
+          }
+        },
+        "finishDate": "2014-07-01",
+        "linkedCompetences": [
+          {
+            "name": "AJAX",
+            "type": "technology"
+          },
+          {
+            "name": "HTML",
+            "type": "technology"
+          },
+          {
+            "name": "PHP",
+            "type": "technology"
+          },
+          {
+            "name": "Symfony",
+            "type": "technology"
+          },
+          {
+            "name": "jQuery",
+            "type": "technology"
+          }
+        ]
+      }
+    ],
+    "softSkills": [
+      {
+        "skill": {
+          "name": "Attention to detail",
+          "type": "practice"
+        }
+      },
+      {
+        "skill": {
+          "name": "Continuous learning",
+          "type": "practice"
+        }
+      },
+      {
+        "skill": {
+          "name": "Team player",
+          "type": "practice"
+        }
+      }
+    ]
+  },
+  "careerPreferences": {
+    "contact": {
+      "contactMails": [
+        "yaikelvl@gmail.com"
+      ]
+    },
+    "preferences": {
+      "preferredCompetences": [
+        {
+          "name": "CSS",
+          "type": "technology"
+        },
+        {
+          "name": "Git",
+          "type": "technology"
+        },
+        {
+          "name": "Github",
+          "type": "technology"
+        },
+        {
+          "name": "HTML",
+          "type": "technology"
+        },
+        {
+          "name": "JavaScript",
+          "type": "technology"
+        },
+        {
+          "name": "MongoDB",
+          "type": "technology"
+        },
+        {
+          "name": "NextJS",
+          "type": "technology"
+        },
+        {
+          "name": "PostgreSQL",
+          "type": "technology"
+        },
+        {
+          "name": "Postman",
+          "type": "technology"
+        },
+        {
+          "name": "Prisma",
+          "type": "technology"
+        },
+        {
+          "name": "React",
+          "type": "technology"
+        },
+        {
+          "name": "Swagger",
+          "type": "technology"
+        },
+        {
+          "name": "TypeORM",
+          "type": "technology"
+        },
+        {
+          "name": "TypeScript",
+          "type": "technology"
+        },
+        {
+          "name": "nestJS",
+          "type": "technology"
+        }
+      ],
+      "discardedCompetences": [
+        {
+          "name": "C#",
+          "type": "technology"
+        },
+        {
+          "name": "C++",
+          "type": "technology"
+        },
+        {
+          "name": "Go",
+          "type": "technology"
+        },
+        {
+          "name": "PHP",
+          "type": "technology"
+        }
+      ],
+      "preferredRoles": [
+        "Backend Developer"
+      ]
+    },
+    "status": "searchingActively",
+    "requirements": {
+      "contractTypes": [
+        "permanent",
+        "freelance"
+      ]
+    }
+  },
+  "manfredSpecificData": {
+    "mainStackTechs": [
+      {
+        "name": "Adobe Photoshop",
+        "type": "technology"
+      },
+      {
+        "name": "Docker",
+        "type": "technology"
+      },
+      {
+        "name": "GraphQL",
+        "type": "technology"
+      },
+      {
+        "name": "TypeScript",
+        "type": "technology"
+      },
+      {
+        "name": "nestJS",
+        "type": "technology"
+      }
+    ],
+    "desiredJobDescription": "My perfect job would have to be a pretty demanding one, surrounded by like-minded professionals who care about and like their work, where there is always someone overseeing the quality of the processes. One in which the company trusts in your skills, confidently trusting you with complex tasks. Knowledge should flow between colleagues, as I think this is the best way to learn. Training should be a fundamental pillar to continue improving every day and stay motivated at work.",
+    "goodPractices": "I am a backend developer looking to use his technical knowledge and problem-solving skills to create successful implementations and high-quality solutions that address real-world business needs and improve customer experience. My goal is to contribute with my initiative and dedication to achieve organizational goals and generate a positive impact.\nI apply several solid practices in my development approach. I employ the creation of reusable codes and libraries for future use, I like to always have a close correlation with my work team, that is, developers, designers and system administrators to identify new features. I like to cooperate with frontend developers for the integration of new user-oriented elements. I apply design, coding and documentation standards that allow the best understanding of the Work Team.\nI design and implement database schemas, in addition to having experience with different database management systems.\n\nI have 3 years of experience editing and correcting photos using tools such as Adobe Photoshop and Adobe Lightroom. In my work I always try to ensure that there is a correlation between lighting and shadows depending on the place where the photo was taken and the client's requests. I make the most of the different tools that give me great versatility when editing or retouching a photo, whether natural or studio."
+  }
+}
